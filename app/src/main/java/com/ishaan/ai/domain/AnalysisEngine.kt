@@ -274,16 +274,16 @@ class AnalysisEngine(private val who: WhoGrowth?) {
         if (f.isEmpty()) return@mapNotNull null
         val dates = f.map { Fmt.toLocalDate(it.studyDate) }.distinct().sorted()
         val shown = if (dates.size > 4) listOf(dates.first()) + dates.takeLast(3) else dates
-        val keys = f.filter { it.param != ImagingParam.IMPRESSION.name }.map { it.side to it.param }.distinct()
+        val keys = f.filter { it.parameter != ImagingParam.IMPRESSION.name }.map { it.side to it.parameter }.distinct()
             .sortedWith(compareBy({ sideOrder(it.first) }, { ImagingParam.of(it.second).ordinal }))
         val rows = keys.map { (side, param) ->
             listOf(sideLabel(side), ImagingParam.of(param).label) + shown.map { d ->
-                f.filter { it.side == side && it.param == param && Fmt.toLocalDate(it.studyDate) == d }
+                f.filter { it.side == side && it.parameter == param && Fmt.toLocalDate(it.studyDate) == d }
                     .joinToString("; ") { v -> (v.valueNumeric?.let { n -> "${Fmt.num(n)} ${v.unit}".trim() } ?: v.valueText) + if (v.verification == Verification.UNVERIFIED) " *" else "" }
                     .ifBlank { "—" }
             }
         }
-        val impressions = f.filter { it.param == ImagingParam.IMPRESSION.name }.sortedBy { it.studyDate }
+        val impressions = f.filter { it.parameter == ImagingParam.IMPRESSION.name }.sortedBy { it.studyDate }
             .map { Finding("Impression (${Fmt.date(it.studyDate)}): ${it.valueText}", it.studyDate, Fmt.verificationLabel(it.verification)) }
         val title = when (m) { "ULTRASOUND" -> "Ultrasound comparison"; "DMSA" -> "DMSA comparison"; else -> "MCU / VCUG findings" }
         Section(

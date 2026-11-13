@@ -249,7 +249,7 @@ private fun KidneyWidget(nav: NavHostController, labs: List<ExtractedLabResult>,
         val dm = imaging.filter { it.modality == "DMSA" }.maxOfOrNull { it.studyDate }
         KeyValue("Latest ultrasound", us?.let { Fmt.date(it) } ?: "none recorded")
         KeyValue("Latest DMSA", dm?.let { Fmt.date(it) } ?: "none recorded")
-        imaging.filter { it.modality == "DMSA" && it.studyDate == dm && it.param == ImagingParam.SPLIT_FUNCTION.name }.takeIf { it.isNotEmpty() }?.let { s ->
+        imaging.filter { it.modality == "DMSA" && it.studyDate == dm && it.parameter == ImagingParam.SPLIT_FUNCTION.name }.takeIf { it.isNotEmpty() }?.let { s ->
             KeyValue("Split function", s.sortedBy { it.side }.joinToString(" · ") { "${it.side.lowercase().replaceFirstChar { c -> c.uppercase() }} ${Fmt.num(it.valueNumeric)}%" })
         }
         Text("Trends only — interpretation belongs to Ishaan's nephrologist.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

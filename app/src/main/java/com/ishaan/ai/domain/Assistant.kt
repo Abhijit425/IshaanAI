@@ -115,9 +115,9 @@ class RuleAssistant(private val engine: AnalysisEngine) {
         val pick = if (dates.size >= 2 && has(q, "first")) listOf(dates.first(), dates.last()) else dates.takeLast(2)
         val text = buildString {
             appendLine(if (pick.size == 2) "Comparing $name of ${Fmt.date(pick[0])} with ${Fmt.date(pick[1])}:" else "$name of ${Fmt.date(pick[0])} (only one study stored):")
-            val keys = f.map { it.side to it.param }.distinct()
+            val keys = f.map { it.side to it.parameter }.distinct()
             for ((side, param) in keys) {
-                val vals = pick.map { d -> f.filter { it.side == side && it.param == param && Fmt.toLocalDate(it.studyDate) == d }.joinToString("; ") { v -> v.valueNumeric?.let { n -> "${Fmt.num(n)} ${v.unit}".trim() } ?: v.valueText } }
+                val vals = pick.map { d -> f.filter { it.side == side && it.parameter == param && Fmt.toLocalDate(it.studyDate) == d }.joinToString("; ") { v -> v.valueNumeric?.let { n -> "${Fmt.num(n)} ${v.unit}".trim() } ?: v.valueText } }
                 if (vals.all { it.isBlank() }) continue
                 val sideTxt = when (side) { "RIGHT" -> "Right"; "LEFT" -> "Left"; "BLADDER" -> "Bladder"; else -> "" }
                 appendLine("• ${listOf(sideTxt, ImagingParam.of(param).label).filter { it.isNotBlank() }.joinToString(" – ")}: ${vals.joinToString(" → ") { it.ifBlank { "not reported" } }}")
